@@ -1,6 +1,5 @@
 package spiderbiggen.shoppingcart.Data;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.util.Log;
 
@@ -12,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import spiderbiggen.shoppingcart.R;
-import spiderbiggen.shoppingcart.Util.JsonParser;
 
 /**
  * Created by Stefan Breetveld on 8-3-2016.
@@ -28,40 +26,43 @@ public class StoreHolder {
 
     private List<String> keys;
 
+    private StoreHolder() {
+    }
+
     public static StoreHolder getInstance() {
         return instance;
     }
 
-    private StoreHolder(){}
-
     public void setContext(Context context) {
         this.context = context;
-        this.setStores(this.readStores());
+        this.setStores(this.getStores());
     }
 
     @NotNull
     public HashMap<String, List<Item>> getStores() {
-        HashMap<String, List<Item>> tempStores;
         if (stores == null || stores.isEmpty()) {
-            tempStores = readStores();
-            stores = tempStores;
+            stores = readStores();
         }
-        else tempStores = stores;
+        stores.put(context.getString(R.string.leftovers), new ArrayList<Item>());
+        return stores;
+    }
 
-        List<Item> leftovers = new ArrayList<>();
-        for(String s : stores.keySet()) {
-            leftovers.addAll(stores.get(s));
-            for (Item item : stores.get(s)) {
-                if (!item.isNeeded()) leftovers.remove(item);
-            }
-        }
-        tempStores.put(context.getResources().getString(R.string.leftovers), leftovers);
-
-        return tempStores;
+    public void setStores(HashMap<String, List<Item>> map) {
+        this.stores = map;
     }
 
     public List<Item> getItems(String key) {
-        if (stores == null || stores.isEmpty() || key.equals(context.getString(R.string.leftovers)) || !stores.containsKey(key)) stores = getStores();
+        if (stores == null || stores.isEmpty() || !stores.containsKey(key)) stores = getStores();
+        if (key.equals(context.getString(R.string.leftovers))) {
+            List<Item> leftovers = new ArrayList<>();
+            for (String s : stores.keySet()) {
+                leftovers.addAll(stores.get(s));
+                for (Item item : stores.get(s)) {
+                    if (!item.isNeeded()) leftovers.remove(item);
+                }
+            }
+            stores.put(context.getString(R.string.leftovers), leftovers);
+        }
         if (!stores.containsKey(key)) return new ArrayList<>();
         return stores.get(key);
     }
@@ -74,10 +75,6 @@ public class StoreHolder {
         Collections.sort(keys);
         this.keys = keys;
         return keys;
-    }
-
-    public void setStores(HashMap<String, List<Item>> map) {
-        this.stores = map;
     }
 
     public HashMap<String, List<Item>> readStores(){

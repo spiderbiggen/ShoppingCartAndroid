@@ -1,4 +1,4 @@
-package spiderbiggen.shoppingcart.Util;
+package spiderbiggen.shoppingcart;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -12,19 +12,15 @@ import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
+import spiderbiggen.shoppingcart.Adapters.StoreSpinnerAdapter;
 import spiderbiggen.shoppingcart.Data.Item;
 import spiderbiggen.shoppingcart.Data.StoreHolder;
-import spiderbiggen.shoppingcart.MainActivity;
-import spiderbiggen.shoppingcart.R;
-import spiderbiggen.shoppingcart.Util.ShopAdapter;
 
 /**
  * Created by Stefan Breetveld on 12-3-2016.
  * Part of Shopping Cart.
  */
-public class ClickListeners {
+public class OnClickListeners {
 
     public static OnClickListener openAddDialog(final AppCompatActivity activity) {
         return openAddDialog(new Item(), activity);
@@ -44,7 +40,7 @@ public class ClickListeners {
                 dialog.setTitle(dialogTitle);
 
                 final Spinner spinner = (Spinner) dialog.findViewById(R.id.new_item_store_spinner);
-                ShopAdapter adapter = new ShopAdapter(dialog.getContext(), StoreHolder.getInstance().getKeys());
+                StoreSpinnerAdapter adapter = new StoreSpinnerAdapter(dialog.getContext(), StoreHolder.getInstance().getKeys());
                 spinner.setAdapter(adapter);
 
                 final EditText editText = (EditText) dialog.findViewById(R.id.editText);
@@ -79,13 +75,13 @@ public class ClickListeners {
                         String store = spinner.getSelectedItem().toString();
                         String itemName = editText.getText().toString();
 
-                        if(!item.isEmpty()) storeHolder.getStores().get(item.getStoreName()).remove(item);
+                        if (!item.isEmpty()) storeHolder.getItems(item.getStoreName()).remove(item);
 
                         item.setStoreName(store);
                         item.setItemName(itemName);
                         item.setEmpty(false);
 
-                        storeHolder.getStores().get(item.getStoreName()).add(item);
+                        storeHolder.getItems(item.getStoreName()).add(item);
 
                         activity.getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.container, MainActivity.PlaceholderFragment.newInstance((String) spinner.getSelectedItem()))
@@ -96,11 +92,11 @@ public class ClickListeners {
                                     @Override
                                     public void onClick(View v) {
                                         if (oldItem.isEmpty()) {
-                                            storeHolder.getStores().get(item.getStoreName()).remove(item);
+                                            storeHolder.getItems(item.getStoreName()).remove(item);
                                         } else {
-                                            storeHolder.getStores().get(item.getStoreName()).remove(item);
+                                            storeHolder.getItems(item.getStoreName()).remove(item);
                                             item.copyFrom(oldItem);
-                                            storeHolder.getStores().get(oldItem.getStoreName()).add(item);
+                                            storeHolder.getItems(oldItem.getStoreName()).add(item);
                                         }
                                         final Spinner spin = (Spinner) activity.findViewById(R.id.main_content).findViewById(R.id.spinner);
                                         activity.getSupportFragmentManager().beginTransaction()

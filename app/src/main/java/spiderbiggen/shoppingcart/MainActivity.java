@@ -1,14 +1,13 @@
 package spiderbiggen.shoppingcart;
 
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,11 +19,10 @@ import android.widget.Spinner;
 
 import java.util.List;
 
+import spiderbiggen.shoppingcart.Adapters.ItemRecycleViewAdapter;
+import spiderbiggen.shoppingcart.Adapters.StoreSpinnerAdapter;
 import spiderbiggen.shoppingcart.Data.Item;
 import spiderbiggen.shoppingcart.Data.StoreHolder;
-import spiderbiggen.shoppingcart.Util.ClickListeners;
-import spiderbiggen.shoppingcart.Util.RVAdapter;
-import spiderbiggen.shoppingcart.Util.ShopAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(new ShopAdapter(toolbar.getContext(), StoreHolder.getInstance().getKeys()));
+        spinner.setAdapter(new StoreSpinnerAdapter(toolbar.getContext(), StoreHolder.getInstance().getKeys()));
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -59,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(ClickListeners.openAddDialog(this));
+        fab.setOnClickListener(OnClickListeners.openAddDialog(this));
 
     }
 
@@ -123,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
             rv.setLayoutManager(llm);
 
             String key = getArguments().getString(ARG_STORE_NAME);
-            List<Item> items = StoreHolder.getInstance().getStores().get(key);
+            List<Item> items = StoreHolder.getInstance().getItems(key);
 
-            RVAdapter adapter = new RVAdapter(items);
+            ItemRecycleViewAdapter adapter = new ItemRecycleViewAdapter(items);
             rv.setAdapter(adapter);
             return rootView;
         }

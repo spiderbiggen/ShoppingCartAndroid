@@ -1,4 +1,4 @@
-package spiderbiggen.shoppingcart.Util;
+package spiderbiggen.shoppingcart.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -9,19 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.HashMap;
 import java.util.List;
-
-import spiderbiggen.shoppingcart.Data.Item;
 
 /**
  * Created by Stefan Breetveld on 12-3-2016.
  * Part of Shopping Cart.
  */
-public class ShopAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
+public class StoreSpinnerAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
     private final ThemedSpinnerAdapter.Helper mDropDownHelper;
 
-    public ShopAdapter(Context context, List<String> objects) {
+    public StoreSpinnerAdapter(Context context, List<String> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
         mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
     }

@@ -1,9 +1,8 @@
-package spiderbiggen.shoppingcart.Util;
+package spiderbiggen.shoppingcart.Data;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.JsonReader;
+import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,16 +13,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import spiderbiggen.shoppingcart.Data.Item;
-
 /**
  * Created by Stefan Breetveld on 8-3-2016.
  * Part of Shopping Cart.
  */
 public class JsonParser {
 
+    private static final String TAG = "JsonParser";
+
     @NotNull
     public static HashMap<String, List<Item>> readJsonStream(Context in) throws IOException {
+        long start = System.currentTimeMillis();
         InputStream storeFile = in.getAssets().open("stores.json");
         InputStream itemFile = in.getAssets().open("items.json");
 
@@ -32,6 +32,8 @@ public class JsonParser {
         reader = new JsonReader(new InputStreamReader(itemFile, "UTF-8"));
         HashMap<String, List<Item>> items = readItemArray(reader, stores);
         reader.close();
+        long elapsed = System.currentTimeMillis() - start;
+        Log.d(TAG, "readJsonStream: time elapsed: " + elapsed);
         return items;
     }
 

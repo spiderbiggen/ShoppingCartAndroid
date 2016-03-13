@@ -1,4 +1,4 @@
-package spiderbiggen.shoppingcart.Util;
+package spiderbiggen.shoppingcart.Adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,17 +15,18 @@ import java.util.List;
 
 import spiderbiggen.shoppingcart.Data.Item;
 import spiderbiggen.shoppingcart.MainActivity;
+import spiderbiggen.shoppingcart.OnClickListeners;
 import spiderbiggen.shoppingcart.R;
 
 /**
  * Created by Stefan Breetveld on 8-3-2016.
  * Part of Shopping Cart.
  */
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ItemViewHolder> {
+public class ItemRecycleViewAdapter extends RecyclerView.Adapter<ItemRecycleViewAdapter.ItemViewHolder> {
 
     private List<Item> items;
 
-    public RVAdapter(List<Item> items) {
+    public ItemRecycleViewAdapter(List<Item> items) {
         this.items = items;
     }
 
@@ -61,7 +62,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ItemViewHolder> {
             }
         });
 
-        holder.iv.setOnClickListener(ClickListeners.openAddDialog(item, MainActivity.activity));
+        holder.iv.setOnClickListener(OnClickListeners.openAddDialog(item, MainActivity.activity));
     }
 
     @Override
