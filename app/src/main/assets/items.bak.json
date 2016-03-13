@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Cola",
+    "amount": 1,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 2,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 3,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 4,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 5,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 6,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 7,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 8,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 9,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 10,
+    "needed": true,
+    "area": 0,
+    "store id":0
+  },
+  {
+    "name": "Cola",
+    "amount": 11,
+    "needed": true,
+    "area": 0,
+    "store id":1
+  },
+  {
+    "name": "Cola",
+    "amount": 12,
+    "needed": true,
+    "area": 0,
+    "store id":1
+  },
+  {
+    "name": "Cola",
+    "amount": 13,
+    "needed": true,
+    "area": 0,
+    "store id":1
+  }
+]
