@@ -10,29 +10,48 @@ import java.text.MessageFormat;
  */
 public class Item implements Comparable<Item> {
 
-    private int area;
-    private String itemName;
-    private int amount;
-    private boolean neededNow;
-    private String storeName;
+    private int id = -1;
+    private int area = 0;
+    private String itemName = "";
+    private int amount = 0;
+    private boolean neededNow = false;
+    private int storeId = -1;
 
-    private boolean empty;
-
-    public Item(Item item){
+    /**
+     * Create a copy of the instance
+     * @param item item to copy from
+     */
+    private Item(Item item){
         copyFrom(item);
     }
 
     public Item() {
-        empty = true;
     }
 
-    public Item(String itemName, int amount, boolean neededNow, int area, String storeName){
+    /**
+     * Create a new instance of an item
+     * @param id the id of this object in the database
+     * @param itemName name of the article
+     * @param amount the amount needed
+     * @param neededNow if it's needed this time
+     * @param area priority
+     * @param storeId the name of the store
+     */
+    public Item(int id, String itemName, int amount, boolean neededNow, int area, int storeId){
+        this.id = id;
         this.itemName = itemName;
         this.amount = amount;
         this.neededNow = neededNow;
         this.area = area;
-        this.storeName = storeName;
-        empty = false;
+        this.storeId = storeId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setItemName(String itemName) {
@@ -67,29 +86,21 @@ public class Item implements Comparable<Item> {
         this.area = area;
     }
 
-    public String getStoreName() {
-        return storeName;
+    public int getStoreId() {
+        return storeId;
     }
 
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
     }
 
-    public boolean isEmpty() {
-        return empty;
-    }
-
-    public void setEmpty(boolean empty) {
-        this.empty = empty;
-    }
 
     public void copyFrom(Item item) {
         this.itemName = item.itemName;
         this.amount = item.amount;
         this.neededNow = item.neededNow;
         this.area = item.area;
-        this.storeName = item.storeName;
-        this.empty = item.isEmpty();
+        this.storeId = item.storeId;
     }
 
     @Override
@@ -102,9 +113,8 @@ public class Item implements Comparable<Item> {
         if (area != item.area) return false;
         if (amount != item.amount) return false;
         if (neededNow != item.neededNow) return false;
-        if (empty != item.empty) return false;
         if (!itemName.equals(item.itemName)) return false;
-        return storeName.equals(item.storeName);
+        return storeId == item.storeId;
 
     }
 
@@ -114,8 +124,7 @@ public class Item implements Comparable<Item> {
         result = 31 * result + itemName.hashCode();
         result = 31 * result + amount;
         result = 31 * result + (neededNow ? 1 : 0);
-        result = 31 * result + storeName.hashCode();
-        result = 31 * result + (empty ? 1 : 0);
+        result = 31 * result + storeId;
         return result;
     }
 
@@ -128,5 +137,10 @@ public class Item implements Comparable<Item> {
     @Override
     public String toString() {
         return MessageFormat.format("Item{name='{0}', amount={1}, area={2}}", itemName, amount, area);
+    }
+
+    public Item copy() {
+        Item item = new Item(this);
+        return null;
     }
 }

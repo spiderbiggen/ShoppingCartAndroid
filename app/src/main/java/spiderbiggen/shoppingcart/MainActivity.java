@@ -1,9 +1,14 @@
 package spiderbiggen.shoppingcart;
 
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,16 +18,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
 
-import java.util.List;
-
 import spiderbiggen.shoppingcart.Adapters.ItemRecycleViewAdapter;
 import spiderbiggen.shoppingcart.Adapters.StoreSpinnerAdapter;
-import spiderbiggen.shoppingcart.Data.Item;
-import spiderbiggen.shoppingcart.Data.StoreHolder;
+import spiderbiggen.shoppingcart.Data.DataBaseManager;
+import spiderbiggen.shoppingcart.Data.ItemReaderHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activity = this;
         setContentView(R.layout.activity_main);
-        StoreHolder.getInstance().setContext(getApplicationContext());
+        DataBaseManager.getInstance(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(new StoreSpinnerAdapter(toolbar.getContext(), StoreHolder.getInstance().getKeys()));
+        spinner.setAdapter(new StoreSpinnerAdapter(toolbar.getContext(), DataBaseManager.getInstance().getKeys()));
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -80,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_recreate) {
+            DataBaseManager.getInstance().updateStores();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -87,12 +95,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
         private static final String ARG_STORE_NAME = "store_name";
+        private static final int URL_LOADER = 0;
+        private View rootView;
 
         public PlaceholderFragment() {
         }
@@ -111,8 +121,35 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            getLoaderManager().initLoader(URL_LOADER, getArguments(), this);
+            getActivity().requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
+            getActivity().setProgressBarIndeterminateVisibility(true);
+            rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            return rootView;
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            switch (id) {
+                case URL_LOADER:
+                    String key = args.getString(ARG_STORE_NAME);
+                    assert key != null;
+                    if(key.equals(getContext().getString(R.string.leftovers))) {
+                        return new CursorLoader(getActivity(), Uri.parse("spiderbiggen.shoppingcart/item_table"), null, null, null, null);
+                    }
+                    String selection = ItemReaderHelper.ItemEntry.COLUMN_NAME_ITEM_STORE_ID + " =  SELECT " + ItemReaderHelper.StoreEntry._ID + " FROM " + ItemReaderHelper.StoreEntry.TABLE_NAME + " WHERE " + ItemReaderHelper.StoreEntry.COLUMN_NAME_STORE_NAME + " = ?";
+                    String[] selectionargs = { key };
+                    return new CursorLoader(getActivity(), Uri.parse("spiderbiggen.shoppingcart/item_table"), null, selection, selectionargs, null);
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
             RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv);
             rv.setHasFixedSize(true);
 
@@ -121,11 +158,14 @@ public class MainActivity extends AppCompatActivity {
             rv.setLayoutManager(llm);
 
             String key = getArguments().getString(ARG_STORE_NAME);
-            List<Item> items = StoreHolder.getInstance().getItems(key);
 
-            ItemRecycleViewAdapter adapter = new ItemRecycleViewAdapter(items);
+            ItemRecycleViewAdapter adapter = new ItemRecycleViewAdapter(DataBaseManager.getInstance().getItemsAsList(key));
             rv.setAdapter(adapter);
-            return rootView;
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
         }
     }
 }

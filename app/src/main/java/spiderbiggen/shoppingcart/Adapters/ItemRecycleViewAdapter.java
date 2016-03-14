@@ -1,5 +1,6 @@
 package spiderbiggen.shoppingcart.Adapters;
 
+import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -62,7 +63,7 @@ public class ItemRecycleViewAdapter extends RecyclerView.Adapter<ItemRecycleView
             }
         });
 
-        holder.iv.setOnClickListener(OnClickListeners.openAddDialog(item, MainActivity.activity));
+        holder.iv.setOnClickListener(OnClickListeners.openAddDialog(item.getId(), MainActivity.activity));
     }
 
     @Override

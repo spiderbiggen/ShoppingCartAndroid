@@ -2,6 +2,7 @@ package spiderbiggen.shoppingcart.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,8 @@ import java.util.List;
 public class StoreSpinnerAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
     private final ThemedSpinnerAdapter.Helper mDropDownHelper;
 
-    public StoreSpinnerAdapter(Context context, List<String> objects) {
-        super(context, android.R.layout.simple_list_item_1, objects);
+    public StoreSpinnerAdapter(Context context, List<String> mArrayList) {
+        super(context, android.R.layout.simple_list_item_1, mArrayList);
         mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
     }
 
