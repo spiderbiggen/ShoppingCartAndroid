@@ -11,18 +11,46 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import spiderbiggen.shoppingcart.Data.Store;
+import spiderbiggen.shoppingcart.R;
+
 /**
  * Created by Stefan Breetveld on 12-3-2016.
  * Part of Shopping Cart.
  */
-public class StoreSpinnerAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
+public class StoreSpinnerAdapter extends ArrayAdapter<Store> implements ThemedSpinnerAdapter {
     private final ThemedSpinnerAdapter.Helper mDropDownHelper;
 
-    public StoreSpinnerAdapter(Context context, List<String> objects) {
+
+    public StoreSpinnerAdapter(Context context, List<Store> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
         mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
     }
 
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        TextView itemView;
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(this.getContext())
+                    .inflate(android.R.layout.simple_spinner_item, parent, false);
+
+            itemView = (TextView) convertView.findViewById(android.R.id.text1);
+            convertView.setTag(itemView);
+
+        } else {
+            itemView = (TextView) convertView.getTag();
+        }
+
+        Store store = getItem(position);
+        if (store != null) {
+            // My layout has only one TextView
+            // do whatever you want with your string and long
+            itemView.setText(store.getStoreName());
+        }
+
+        return convertView;
+    }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
@@ -36,8 +64,9 @@ public class StoreSpinnerAdapter extends ArrayAdapter<String> implements ThemedS
             view = convertView;
         }
 
+        Store store = getItem(position);
         TextView textView = (TextView) view.findViewById(android.R.id.text1);
-        textView.setText(getItem(position));
+        textView.setText(store.getStoreName());
 
         return view;
     }

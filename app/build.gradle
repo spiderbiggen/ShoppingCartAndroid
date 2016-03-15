@@ -19,6 +19,12 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -27,4 +33,17 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.1.0'
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'org.jetbrains:annotations:13.0'
+    compile 'com.facebook.stetho:stetho:1.3.1'
+    compile 'com.uphyca:stetho_realm:0.8.0'
 }
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.realm:realm-gradle-plugin:0.88.1"
+    }
+}
+
+apply plugin: 'realm-android'

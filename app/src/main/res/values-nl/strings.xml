@@ -6,7 +6,7 @@
     <string name="edit_label">Pas het artikel aan</string>
     <string name="item_icon_desc">Afbeelding van artikel</string>
     <string name="leftovers">​Restanten</string>
-    <string name="name_item">Artikel:</string>
+    <string name="name_item">Artikel</string>
     <string name="placeholder_item_name">Toilet papier</string>
     <string name="save_button_string">@android:string/ok</string>
     <string name="store_select">Winkel</string>
@@ -14,4 +14,10 @@
     <string name="item_dialog_title">Voeg een artikel toe</string>
     <string name="item_added">Artikel Toegevoegd</string>
     <string name="change_item_dialog">Pas een artikel aan</string>
+    <string name="action_reload_realm">Herlaad Winkelwagen</string>
+    <string name="amount_text">Aantal</string>
+    <string name="needed_text">Nu nodig?</string>
+    <string name="action_create_store">Voeg winkel toe</string>
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nee</string>
 </resources>

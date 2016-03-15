@@ -1,62 +1,70 @@
 package spiderbiggen.shoppingcart.Data;
 
-import android.support.annotation.NonNull;
-
-import java.text.MessageFormat;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Stefan Breetveld on 8-3-2016 as Shopping Cart.
  * Part of Shopping Cart.
  */
-public class Item implements Comparable<Item> {
+public class Item extends RealmObject {
 
-    private int area;
+    private static RealmManager realmManager = RealmManager.getInstance();
+
+    @PrimaryKey
+    private long itemId;
+
     private String itemName;
     private int amount;
     private boolean neededNow;
-    private String storeName;
-
-    private boolean empty;
-
-    public Item(Item item){
-        copyFrom(item);
-    }
+    private int area;
+    private int storeId;
 
     public Item() {
-        empty = true;
     }
 
-    public Item(String itemName, int amount, boolean neededNow, int area, String storeName){
+    public Item(boolean bool) {
+
+    }
+
+    public Item(long id, String itemName, int amount, boolean neededNow, int area, int storeId) {
+        itemId = id;
         this.itemName = itemName;
         this.amount = amount;
         this.neededNow = neededNow;
         this.area = area;
-        this.storeName = storeName;
-        empty = false;
+        this.storeId = storeId;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public Item(String itemName, int amount, boolean neededNow, int area, int storeId) {
+        this(realmManager.getRealm().where(Item.class).count() + 1, itemName, amount, neededNow, area, storeId);
     }
 
-    public String getItemName() {
-        return itemName;
+    public Item(String itemName, int amount, boolean neededNow, int area, String storeName) {
+        this(realmManager.getRealm().where(Item.class).count() + 1, itemName, amount, neededNow, area, realmManager.getRealm().where(Store.class).equalTo("storeName", storeName).findFirst().getStoreId());
     }
 
-    public int getAmount() {
-        return amount;
+    public static void copyFrom(final Item from, final Item to) {
+        realmManager.getRealm().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                from.itemId = to.itemId;
+                from.itemName = to.itemName;
+                from.amount = to.amount;
+                from.neededNow = to.neededNow;
+                from.area = to.area;
+                from.storeId = to.storeId;
+            }
+        });
     }
 
-    public void setAmount(int newAmount) {
-        this.amount = newAmount;
+    public long getItemId() {
+        return itemId;
     }
 
-    public void setNeededNow(boolean neededNow) {
-        this.neededNow = neededNow;
-    }
-
-    public boolean isNeeded(){
-        return neededNow;
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 
     public int getArea() {
@@ -67,66 +75,36 @@ public class Item implements Comparable<Item> {
         this.area = area;
     }
 
-    public String getStoreName() {
-        return storeName;
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
-    public boolean isEmpty() {
-        return empty;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setEmpty(boolean empty) {
-        this.empty = empty;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
-    public void copyFrom(Item item) {
-        this.itemName = item.itemName;
-        this.amount = item.amount;
-        this.neededNow = item.neededNow;
-        this.area = item.area;
-        this.storeName = item.storeName;
-        this.empty = item.isEmpty();
+    public boolean isNeededNow() {
+        return neededNow;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Item item = (Item) o;
-
-        if (area != item.area) return false;
-        if (amount != item.amount) return false;
-        if (neededNow != item.neededNow) return false;
-        if (empty != item.empty) return false;
-        if (!itemName.equals(item.itemName)) return false;
-        return storeName.equals(item.storeName);
-
+    public void setNeededNow(boolean neededNow) {
+        this.neededNow = neededNow;
     }
 
-    @Override
-    public int hashCode() {
-        int result = area;
-        result = 31 * result + itemName.hashCode();
-        result = 31 * result + amount;
-        result = 31 * result + (neededNow ? 1 : 0);
-        result = 31 * result + storeName.hashCode();
-        result = 31 * result + (empty ? 1 : 0);
-        return result;
+    public int getStoreId() {
+        return storeId;
     }
 
-    @Override
-    public int compareTo(@NonNull Item another) {
-        int res = area - another.area;
-        return res != 0 ? res : getItemName().compareTo(another.getItemName());
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
     }
 
-    @Override
-    public String toString() {
-        return MessageFormat.format("Item{name='{0}', amount={1}, area={2}}", itemName, amount, area);
-    }
 }

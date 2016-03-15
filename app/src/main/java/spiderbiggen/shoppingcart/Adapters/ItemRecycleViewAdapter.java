@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import spiderbiggen.shoppingcart.Data.Item;
+import spiderbiggen.shoppingcart.Data.RealmManager;
 import spiderbiggen.shoppingcart.MainActivity;
 import spiderbiggen.shoppingcart.OnClickListeners;
 import spiderbiggen.shoppingcart.R;
@@ -24,6 +25,7 @@ import spiderbiggen.shoppingcart.R;
  */
 public class ItemRecycleViewAdapter extends RecyclerView.Adapter<ItemRecycleViewAdapter.ItemViewHolder> {
 
+    RealmManager realmManager = RealmManager.getInstance();
     private List<Item> items;
 
     public ItemRecycleViewAdapter(List<Item> items) {
@@ -41,11 +43,11 @@ public class ItemRecycleViewAdapter extends RecyclerView.Adapter<ItemRecycleView
         final CardView cv = holder.cv;
         final Item item = items.get(position);
         holder.tv.setText(String.format("%s %d", item.getItemName(), item.getAmount()));
-        holder.cb.setChecked(!item.isNeeded());
-        if (!item.isNeeded()) {
-            cv.setCardBackgroundColor(R.color.cardview_dark_background);
-        } else {
+        holder.cb.setChecked(!item.isNeededNow());
+        if (item.isNeededNow()) {
             cv.setCardBackgroundColor(-1);
+        } else {
+            cv.setCardBackgroundColor(R.color.cardview_dark_background);
         }
 
 
@@ -53,7 +55,7 @@ public class ItemRecycleViewAdapter extends RecyclerView.Adapter<ItemRecycleView
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                items.get(position).setNeededNow(!isChecked);
+                realmManager.setItemNeeded(items.get(position), !isChecked);
                 if (isChecked) {
                     cv.setCardBackgroundColor(R.color.cardview_dark_background);
                 } else {
@@ -62,7 +64,7 @@ public class ItemRecycleViewAdapter extends RecyclerView.Adapter<ItemRecycleView
             }
         });
 
-        holder.iv.setOnClickListener(OnClickListeners.openAddDialog(item, MainActivity.activity));
+        holder.iv.setOnClickListener(OnClickListeners.openChangeItemDialog(item, MainActivity.activity));
     }
 
     @Override

@@ -17,12 +17,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
 
+import com.facebook.stetho.Stetho;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
+
 import java.util.List;
 
 import spiderbiggen.shoppingcart.Adapters.ItemRecycleViewAdapter;
 import spiderbiggen.shoppingcart.Adapters.StoreSpinnerAdapter;
 import spiderbiggen.shoppingcart.Data.Item;
-import spiderbiggen.shoppingcart.Data.StoreHolder;
+import spiderbiggen.shoppingcart.Data.RealmManager;
+import spiderbiggen.shoppingcart.Data.Store;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,15 +35,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                        .build());
+
         activity = this;
         setContentView(R.layout.activity_main);
-        StoreHolder.getInstance().setContext(getApplicationContext());
+        RealmManager.getInstance().setContext(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(new StoreSpinnerAdapter(toolbar.getContext(), StoreHolder.getInstance().getKeys()));
+        spinner.setAdapter(new StoreSpinnerAdapter(toolbar.getContext(), RealmManager.getInstance().getStores()));
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -47,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 // When the given dropdown item is selected, show its contents in the
                 // container view.
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance((String) spinner.getItemAtPosition(position)))
+                        .replace(R.id.container, PlaceholderFragment.newInstance((Store) spinner.getItemAtPosition(position)))
                         .commit();
             }
 
@@ -57,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(OnClickListeners.openAddDialog(this));
+        fab.setOnClickListener(OnClickListeners.openNewItemDialog(this));
 
     }
 
@@ -80,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_reload) {
+            RealmManager.getInstance().reloadRealm();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -98,13 +113,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * Returns a new instance of this fragment for the given section
-         * number.
+         * Returns a new instance of this fragment for the given {@link Store}
+         * @param store the store to display in this fragment
          */
-        public static PlaceholderFragment newInstance(String store) {
+        public static PlaceholderFragment newInstance(Store store) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putString(ARG_STORE_NAME, store);
+            args.putInt(ARG_STORE_NAME, store.getStoreId());
             fragment.setArguments(args);
             return fragment;
         }
@@ -120,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             rv.setLayoutManager(llm);
 
-            String key = getArguments().getString(ARG_STORE_NAME);
-            List<Item> items = StoreHolder.getInstance().getItems(key);
+            int key = getArguments().getInt(ARG_STORE_NAME);
+            List<Item> items = RealmManager.getInstance().getItems(key);
 
             ItemRecycleViewAdapter adapter = new ItemRecycleViewAdapter(items);
             rv.setAdapter(adapter);
