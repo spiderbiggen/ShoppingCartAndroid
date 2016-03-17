@@ -1,9 +1,7 @@
-package spiderbiggen.shoppingcart.Data;
+package spiderbiggen.shoppingcart.datamanagement;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 
 /**
  * Created by Stefan Breetveld on 14-3-2016.
@@ -14,6 +12,7 @@ public class Store extends RealmObject {
     public static final String STORE_ID = "storeId";
     public static final String STORE_NAME = "storeName";
 
+    private static RealmManager realmManager = RealmManager.getInstance();
 
     @PrimaryKey
     private int storeId;
@@ -23,8 +22,13 @@ public class Store extends RealmObject {
     public Store() {
     }
 
-    public Store(int i, String string) {
-        storeId = i;
+    public Store(int id, String string) {
+        storeId = id;
+        storeName = string;
+    }
+
+    public Store(String string) {
+        storeId = realmManager.getRealm().where(Store.class).max(STORE_ID).intValue() + 1;
         storeName = string;
     }
 

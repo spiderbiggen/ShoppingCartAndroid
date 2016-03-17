@@ -18,6 +18,9 @@
     <string name="amount_text">Aantal</string>
     <string name="needed_text">Nu nodig?</string>
     <string name="action_create_store">Voeg winkel toe</string>
-    <string name="button_yes">Ja</string>
-    <string name="button_no">Nee</string>
+    <string name="action_save">Opslaan voor later</string>
+    <string name="action_load">Laad van eerder</string>
+    <string name="placeholder_store_name">Aldi</string>
+    <string name="dialog_title_new_store">Nieuwe winkel</string>
+    <string name="action_clear">Remove all</string>
 </resources>

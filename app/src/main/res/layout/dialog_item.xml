@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
@@ -55,6 +54,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/new_item_store_spinner"
+            android:capitalize="sentences"
             android:hint="@string/placeholder_item_name"
             android:singleLine="true"
             android:theme="@style/AppTheme" />
@@ -78,6 +78,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/edit_item_name"
+            android:capitalize="sentences"
             android:hint="5"
             android:inputType="number"
             android:numeric="integer"
@@ -95,14 +96,14 @@
             android:text="@string/needed_text"
             android:theme="@style/AppTheme.Dialog.Content" />
 
-        <TextView
+        <Switch
             android:id="@+id/needed_button"
-            android:layout_width="100dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/edit_amount"
-            android:theme="@style/AppTheme.Dialog.Button" />
+            android:checked="true"/>
 
     </RelativeLayout>
 
