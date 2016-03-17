@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,19 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ListView;
 import android.widget.Spinner;
 
-import com.facebook.stetho.Stetho;
-import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
-
-import java.util.List;
-
-import spiderbiggen.shoppingcart.Adapters.ItemRecycleViewAdapter;
-import spiderbiggen.shoppingcart.Adapters.StoreSpinnerAdapter;
-import spiderbiggen.shoppingcart.Data.Item;
-import spiderbiggen.shoppingcart.Data.RealmManager;
-import spiderbiggen.shoppingcart.Data.Store;
+import io.realm.RealmResults;
+import spiderbiggen.shoppingcart.adapters.ItemRealmAdapter;
+import spiderbiggen.shoppingcart.adapters.StoreSpinnerAdapter;
+import spiderbiggen.shoppingcart.datamanagement.Item;
+import spiderbiggen.shoppingcart.datamanagement.RealmManager;
+import spiderbiggen.shoppingcart.datamanagement.Store;
+import spiderbiggen.shoppingcart.dialogcreators.ItemDialog;
+import spiderbiggen.shoppingcart.dialogcreators.StoreDialog;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,23 +32,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
-                        .build());
-
         activity = this;
-        setContentView(R.layout.activity_main);
-        RealmManager.getInstance().setContext(getApplicationContext());
+        RealmManager.getInstance(activity);
 
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(new StoreSpinnerAdapter(toolbar.getContext(), RealmManager.getInstance().getStores()));
+        spinner.setAdapter(new StoreSpinnerAdapter(toolbar.getContext(), (RealmResults<Store>) RealmManager.getInstance().getStores()));
 
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // When the given dropdown item is selected, show its contents in the
@@ -68,8 +58,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(OnClickListeners.openNewItemDialog(this));
-
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ItemDialog.openNewItemDialog(activity);
+            }
+        });
     }
 
 
@@ -88,15 +82,38 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_reload) {
-            RealmManager.getInstance().reloadRealm();
-            return true;
+        RealmManager realmManager = RealmManager.getInstance();
+
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_reload:
+                realmManager.reloadRealm();
+                return true;
+            case R.id.action_create_store:
+                StoreDialog.openNewStoreDialog(activity);
+                return true;
+            case R.id.action_save:
+                realmManager.exportToFile();
+                return true;
+            case R.id.action_clear:
+                realmManager.clearRealm();
+//                final Spinner spinner = (Spinner) findViewById(R.id.spinner);
+//                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//                spinner.setAdapter(new StoreSpinnerAdapter(toolbar.getContext(), RealmManager.getInstance().getStores()));
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.container, PlaceholderFragment.newInstance((Store) spinner.getSelectedItem()))
+//                        .commit();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RealmManager.getInstance().getRealm().close();
     }
 
     /**
@@ -128,18 +145,13 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv);
-            rv.setHasFixedSize(true);
-
-            LinearLayoutManager llm = new LinearLayoutManager(getContext());
-            llm.setOrientation(LinearLayoutManager.VERTICAL);
-            rv.setLayoutManager(llm);
+            ListView lv = (ListView) rootView.findViewById(R.id.rv);
 
             int key = getArguments().getInt(ARG_STORE_NAME);
-            List<Item> items = RealmManager.getInstance().getItems(key);
+            RealmResults<Item> items = (RealmResults) RealmManager.getInstance().getItems(key);
 
-            ItemRecycleViewAdapter adapter = new ItemRecycleViewAdapter(items);
-            rv.setAdapter(adapter);
+            ItemRealmAdapter adapter = new ItemRealmAdapter(activity, items);
+            lv.setAdapter(adapter);
             return rootView;
         }
     }

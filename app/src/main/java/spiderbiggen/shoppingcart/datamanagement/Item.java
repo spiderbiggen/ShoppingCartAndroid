@@ -1,8 +1,9 @@
-package spiderbiggen.shoppingcart.Data;
+package spiderbiggen.shoppingcart.datamanagement;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import spiderbiggen.shoppingcart.dialogcreators.ItemDialog;
 
 /**
  * Created by Stefan Breetveld on 8-3-2016 as Shopping Cart.
@@ -10,6 +11,13 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Item extends RealmObject {
 
+    public static final String ITEM_ID = "itemId";
+    public static final String ITEM_NAME = "itemName";
+    public static final String AMOUNT = "amount";
+    public static final String NEEDED_NOW = "neededNow";
+    public static final String AREA = "AREA";
+    public static final String STORE_ID = "storeId";
+    private static final String TAG = ItemDialog.class.getSimpleName();
     private static RealmManager realmManager = RealmManager.getInstance();
 
     @PrimaryKey
@@ -24,12 +32,8 @@ public class Item extends RealmObject {
     public Item() {
     }
 
-    public Item(boolean bool) {
-
-    }
-
     public Item(long id, String itemName, int amount, boolean neededNow, int area, int storeId) {
-        itemId = id;
+        this.itemId = id;
         this.itemName = itemName;
         this.amount = amount;
         this.neededNow = neededNow;
@@ -38,23 +42,32 @@ public class Item extends RealmObject {
     }
 
     public Item(String itemName, int amount, boolean neededNow, int area, int storeId) {
-        this(realmManager.getRealm().where(Item.class).count() + 1, itemName, amount, neededNow, area, storeId);
+        this(realmManager.getRealm().where(Item.class).max(ITEM_ID).intValue() + 1, itemName, amount, neededNow, area, storeId);
     }
 
     public Item(String itemName, int amount, boolean neededNow, int area, String storeName) {
-        this(realmManager.getRealm().where(Item.class).count() + 1, itemName, amount, neededNow, area, realmManager.getRealm().where(Store.class).equalTo("storeName", storeName).findFirst().getStoreId());
+        this(realmManager.getRealm().where(Item.class).max(ITEM_ID).intValue() + 1, itemName, amount, neededNow, area, realmManager.getRealm().where(Store.class).equalTo("storeName", storeName).findFirst().getStoreId());
     }
 
     public static void copyFrom(final Item from, final Item to) {
         realmManager.getRealm().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                from.itemId = to.itemId;
-                from.itemName = to.itemName;
-                from.amount = to.amount;
-                from.neededNow = to.neededNow;
-                from.area = to.area;
-                from.storeId = to.storeId;
+                to.setItemId(from.getItemId());
+                to.setItemName(from.getItemName());
+                to.setAmount(from.getAmount());
+                to.setNeededNow(from.isNeededNow());
+                to.setArea(from.getArea());
+                to.setStoreId(from.getStoreId());
+            }
+        });
+    }
+
+    public static void setNeededNow(final Item item, final boolean neededNow) {
+        realmManager.getRealm().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                item.setNeededNow(neededNow);
             }
         });
     }
@@ -63,7 +76,7 @@ public class Item extends RealmObject {
         return itemId;
     }
 
-    public void setItemId(int itemId) {
+    public void setItemId(long itemId) {
         this.itemId = itemId;
     }
 

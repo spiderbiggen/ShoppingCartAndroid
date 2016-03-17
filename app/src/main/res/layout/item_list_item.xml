@@ -1,61 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/item_card_view"
-    android:theme="@style/AppTheme.Card"
+    android:layout_marginBottom="4dp"
     android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp">
+    android:paddingBottom="4dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="4dp">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.v7.widget.CardView
+        android:id="@+id/item_card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.Card">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:contentDescription="@string/item_icon_desc" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/item_container"
-            android:clickable="false">
-
-            <CheckBox
+            <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/item_check_box"
-                android:layout_centerVertical="true" />
+                android:contentDescription="@string/item_icon_desc"/>
 
-            <TextView
+            <RelativeLayout
+                android:id="@+id/item_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/item_text"
-                android:layout_toRightOf="@+id/item_check_box"
-                android:layout_toEndOf="@+id/item_check_box"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/item_edit_icon"
-                android:layout_toStartOf="@id/item_edit_icon"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp" />
+                android:clickable="false">
 
-            <ImageButton
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:id="@+id/item_edit_icon"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:theme="@style/AppTheme.IconButton"
-                android:contentDescription="@string/edit_label"
-                android:background="@drawable/ic_mode_edit_black_24dp"
-                android:layout_margin="12dp"/>
+                <CheckBox
+                    android:id="@+id/item_check_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"/>
 
-        </RelativeLayout>
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/item_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/item_check_box"
+                    android:layout_toLeftOf="@+id/item_edit_icon"
+                    android:layout_toRightOf="@+id/item_check_box"
+                    android:layout_toStartOf="@id/item_edit_icon"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:text="New Text"/>
+
+                <ImageButton
+                    android:id="@+id/item_edit_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/ic_mode_edit_black_24dp"
+                    android:contentDescription="@string/edit_label"
+                    android:theme="@style/AppTheme.IconButton"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

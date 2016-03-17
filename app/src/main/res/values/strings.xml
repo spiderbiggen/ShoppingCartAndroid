@@ -18,6 +18,9 @@
     <string name="amount_text">Amount</string>
     <string name="needed_text">Need this now?</string>
     <string name="action_create_store">Add store</string>
-    <string name="button_yes">Yes</string>
-    <string name="button_no">No</string>
+    <string name="action_save">Save for later</string>
+    <string name="action_load">Load from earlier</string>
+    <string name="placeholder_store_name">Aldi</string>
+    <string name="dialog_title_new_store">New store</string>
+    <string name="action_clear">Remove all</string>
 </resources>

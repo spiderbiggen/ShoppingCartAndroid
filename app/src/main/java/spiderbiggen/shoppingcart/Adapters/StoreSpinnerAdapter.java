@@ -1,4 +1,4 @@
-package spiderbiggen.shoppingcart.Adapters;
+package spiderbiggen.shoppingcart.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -6,24 +6,23 @@ import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.List;
-
-import spiderbiggen.shoppingcart.Data.Store;
-import spiderbiggen.shoppingcart.R;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
+import spiderbiggen.shoppingcart.datamanagement.Store;
 
 /**
  * Created by Stefan Breetveld on 12-3-2016.
  * Part of Shopping Cart.
  */
-public class StoreSpinnerAdapter extends ArrayAdapter<Store> implements ThemedSpinnerAdapter {
+public class StoreSpinnerAdapter extends RealmBaseAdapter<Store> implements ThemedSpinnerAdapter {
     private final ThemedSpinnerAdapter.Helper mDropDownHelper;
 
 
-    public StoreSpinnerAdapter(Context context, List<Store> objects) {
-        super(context, android.R.layout.simple_list_item_1, objects);
+
+    public StoreSpinnerAdapter(Context context, RealmResults<Store> objects) {
+        super(context, objects, true);
         mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
     }
 
@@ -32,7 +31,7 @@ public class StoreSpinnerAdapter extends ArrayAdapter<Store> implements ThemedSp
         TextView itemView;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(this.getContext())
+            convertView = LayoutInflater.from(parent.getContext())
                     .inflate(android.R.layout.simple_spinner_item, parent, false);
 
             itemView = (TextView) convertView.findViewById(android.R.id.text1);
@@ -44,8 +43,6 @@ public class StoreSpinnerAdapter extends ArrayAdapter<Store> implements ThemedSp
 
         Store store = getItem(position);
         if (store != null) {
-            // My layout has only one TextView
-            // do whatever you want with your string and long
             itemView.setText(store.getStoreName());
         }
 
@@ -69,6 +66,11 @@ public class StoreSpinnerAdapter extends ArrayAdapter<Store> implements ThemedSp
         textView.setText(store.getStoreName());
 
         return view;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
     }
 
     @Override
