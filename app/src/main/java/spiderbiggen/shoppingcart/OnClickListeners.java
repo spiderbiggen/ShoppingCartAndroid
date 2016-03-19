@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 
-import spiderbiggen.shoppingcart.Adapters.StoreSpinnerAdapter;
+import spiderbiggen.shoppingcart.adapters.StoreSpinnerAdapter;
 import spiderbiggen.shoppingcart.Data.Item;
 import spiderbiggen.shoppingcart.Data.StoreHolder;
 

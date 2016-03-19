@@ -1,4 +1,4 @@
-package spiderbiggen.shoppingcart.Adapters;
+package spiderbiggen.shoppingcart.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;

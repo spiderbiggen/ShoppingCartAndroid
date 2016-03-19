@@ -1,4 +1,4 @@
-package spiderbiggen.shoppingcart.Adapters;
+package spiderbiggen.shoppingcart.adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;

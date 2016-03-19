@@ -19,8 +19,8 @@ import android.widget.Spinner;
 
 import java.util.List;
 
-import spiderbiggen.shoppingcart.Adapters.ItemRecycleViewAdapter;
-import spiderbiggen.shoppingcart.Adapters.StoreSpinnerAdapter;
+import spiderbiggen.shoppingcart.adapters.ItemRecycleViewAdapter;
+import spiderbiggen.shoppingcart.adapters.StoreSpinnerAdapter;
 import spiderbiggen.shoppingcart.Data.Item;
 import spiderbiggen.shoppingcart.Data.StoreHolder;
 
