@@ -13,6 +13,7 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.exceptions.RealmMigrationNeededException;
 import spiderbiggen.shoppingcart.R;
 import spiderbiggen.shoppingcart.dialogcreators.ItemDialog;
@@ -68,12 +69,11 @@ public class RealmManager {
         if (realm.isEmpty()) reloadRealm();
     }
 
-
-    public List<Item> getItems(int key) {
+    public RealmResults<Item> getItems(long key) {
         if (key == -1) {
-            return realm.where(Item.class).equalTo("neededNow", true).notEqualTo(Item.ITEM_ID, -1).findAll();
+            return realm.where(Item.class).equalTo(Item.NEEDED_NOW, true).notEqualTo(Item.ITEM_ID, -1).findAll();
         }
-        return realm.where(Item.class).equalTo("storeId", key).findAllSorted("area");
+        return realm.where(Item.class).equalTo(Item.STORE_ID, key).findAllSorted(Item.AREA);
     }
 
     public Realm getRealm() {
@@ -103,9 +103,9 @@ public class RealmManager {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
+                realm.deleteAll();
                 try {
                     if (isExternalStorageReadable() && hasExternalStoragePrivateFile("stores.json") && hasExternalStoragePrivateFile("items.json")) {
-                        realm.deleteAll();
                         File[] extFiles = ContextCompat.getExternalFilesDirs(context, null);
 
                         FileInputStream stores = new FileInputStream(new File(extFiles[0], "stores.json"));
@@ -120,17 +120,19 @@ public class RealmManager {
 
                 Store store = new Store(-1, context.getString(R.string.leftovers));
                 realm.copyToRealm(store);
+                Log.d(TAG, "execute: default store added");
                 Item item = new Item(-1, "", -1, false, -1, -1);
                 realm.copyToRealm(item);
+                Log.d(TAG, "execute: default item added");
             }
         });
     }
 
-    public Store getStore(int key) {
+    public Store getStore(long key) {
         return realm.where(Store.class).equalTo(Store.STORE_ID, key).findFirst();
     }
 
-    public List<Store> getStores() {
+    public RealmResults<Store> getStores() {
         return realm.where(Store.class).findAllSorted("storeName");
     }
 
@@ -152,8 +154,13 @@ public class RealmManager {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.where(Item.class).notEqualTo(Item.ITEM_ID, -1).findAll().clear();
-                realm.where(Store.class).notEqualTo(Store.STORE_ID, -1).findAll().clear();
+                realm.deleteAll();
+                Store store = new Store(-1, context.getString(R.string.leftovers));
+                realm.copyToRealm(store);
+                Log.d(TAG, "execute: default store added");
+                Item item = new Item(-1, "", -1, false, -1, -1);
+                realm.copyToRealm(item);
+                Log.d(TAG, "execute: default item added");
             }
         });
     }

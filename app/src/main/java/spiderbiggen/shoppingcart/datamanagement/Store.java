@@ -15,28 +15,28 @@ public class Store extends RealmObject {
     private static RealmManager realmManager = RealmManager.getInstance();
 
     @PrimaryKey
-    private int storeId;
+    private long storeId;
 
     private String storeName;
 
     public Store() {
     }
 
-    public Store(int id, String string) {
+    public Store(long id, String string) {
         storeId = id;
         storeName = string;
     }
 
     public Store(String string) {
-        storeId = realmManager.getRealm().where(Store.class).max(STORE_ID).intValue() + 1;
+        storeId = realmManager.getRealm().where(Store.class).count();
         storeName = string;
     }
 
-    public int getStoreId() {
+    public long getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(int storeId) {
+    public void setStoreId(long storeId) {
         this.storeId = storeId;
     }
 

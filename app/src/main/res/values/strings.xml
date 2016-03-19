@@ -23,4 +23,8 @@
     <string name="placeholder_store_name">Aldi</string>
     <string name="dialog_title_new_store">New store</string>
     <string name="action_clear">Remove all</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

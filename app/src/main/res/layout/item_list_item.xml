@@ -60,7 +60,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_margin="12dp"
-                    android:background="@drawable/ic_mode_edit_black_24dp"
+                    android:alpha=".54"
+                    android:background="@drawable/ic_create_24dp"
                     android:contentDescription="@string/edit_label"
                     android:theme="@style/AppTheme.IconButton"/>
 

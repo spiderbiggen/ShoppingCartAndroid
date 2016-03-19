@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import io.realm.RealmResults;
 import spiderbiggen.shoppingcart.R;
-import spiderbiggen.shoppingcart.adapters.StoreSpinnerAdapter;
+import spiderbiggen.shoppingcart.adapters.StoreNavDrawerAdapter;
 import spiderbiggen.shoppingcart.datamanagement.Item;
 import spiderbiggen.shoppingcart.datamanagement.RealmManager;
 import spiderbiggen.shoppingcart.datamanagement.Store;
@@ -33,11 +33,6 @@ public class ItemDialog {
 
         final Dialog dialog = initDialog(activity, R.string.item_dialog_title);
 
-        final Spinner spinner = (Spinner) dialog.findViewById(R.id.new_item_store_spinner);
-        final Spinner spin = (Spinner) activity.findViewById(R.id.spinner);
-
-        spinner.setSelection(spin.getSelectedItemPosition());
-
         TextView saveButton = (TextView) dialog.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new OnClickListener() {
 
@@ -47,9 +42,7 @@ public class ItemDialog {
                 final Item item = DialogItem(dialog);
                 realmManager.add(item);
 
-                spin.setSelection(spinner.getSelectedItemPosition());
-
-                Snackbar.make(activity.findViewById(R.id.main_content), activity.getResources().getString(R.string.item_added), Snackbar.LENGTH_LONG)
+                Snackbar.make(activity.findViewById(R.id.fab), activity.getResources().getString(R.string.item_added), Snackbar.LENGTH_LONG)
                         .setAction(activity.getResources().getString(R.string.undo), new OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -73,14 +66,8 @@ public class ItemDialog {
 
         final Dialog dialog = initDialog(activity, R.string.change_item_dialog);
 
-        final Spinner spinner = (Spinner) dialog.findViewById(R.id.new_item_store_spinner);
-        final Spinner spin = (Spinner) activity.findViewById(R.id.spinner);
         final EditText editItemName = (EditText) dialog.findViewById(R.id.edit_item_name);
         final EditText editAmount = (EditText) dialog.findViewById(R.id.edit_amount);
-
-//        Store store = realmManager.getStore(item.getStoreId());
-//        StoreSpinnerAdapter adapter = (StoreSpinnerAdapter)spinner.getAdapter();
-//        spinner.setSelection(adapter.getPosition(store));
 
         editItemName.setText(item.getItemName());
         editAmount.setText(String.valueOf(item.getAmount()));
@@ -93,9 +80,8 @@ public class ItemDialog {
 
                 final Item oldItem = realmManager.getCopy(item);
                 Item.copyFrom(DialogItem(dialog), item);
-                spin.setSelection(spinner.getSelectedItemPosition());
 
-                Snackbar.make(activity.findViewById(R.id.main_content), activity.getResources().getString(R.string.item_added), Snackbar.LENGTH_LONG)
+                Snackbar.make(activity.findViewById(R.id.fab), activity.getResources().getString(R.string.item_added), Snackbar.LENGTH_LONG)
                         .setAction(activity.getResources().getString(R.string.undo), new OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -120,7 +106,7 @@ public class ItemDialog {
         dialog.setTitle(title);
 
         final Spinner spinner = (Spinner) dialog.findViewById(R.id.new_item_store_spinner);
-        StoreSpinnerAdapter adapter = new StoreSpinnerAdapter(activity, (RealmResults<Store>) RealmManager.getInstance().getStoresDialog());
+        StoreNavDrawerAdapter adapter = new StoreNavDrawerAdapter(activity, (RealmResults<Store>) RealmManager.getInstance().getStoresDialog());
         spinner.setAdapter(adapter);
 
         TextView cancelButton = (TextView) dialog.findViewById(R.id.cancel_button);
@@ -152,7 +138,7 @@ public class ItemDialog {
         }
         boolean neededNow = neededButton.isChecked();
         int area = 0;
-        int store = ((Store) spinner.getSelectedItem()).getStoreId();
+        long store = ((Store) spinner.getSelectedItem()).getStoreId();
         return new Item(itemName, amount, neededNow, area, store);
     }
 

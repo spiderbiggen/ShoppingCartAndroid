@@ -15,7 +15,7 @@ public class Item extends RealmObject {
     public static final String ITEM_NAME = "itemName";
     public static final String AMOUNT = "amount";
     public static final String NEEDED_NOW = "neededNow";
-    public static final String AREA = "AREA";
+    public static final String AREA = "area";
     public static final String STORE_ID = "storeId";
     private static final String TAG = ItemDialog.class.getSimpleName();
     private static RealmManager realmManager = RealmManager.getInstance();
@@ -27,12 +27,12 @@ public class Item extends RealmObject {
     private int amount;
     private boolean neededNow;
     private int area;
-    private int storeId;
+    private long storeId;
 
     public Item() {
     }
 
-    public Item(long id, String itemName, int amount, boolean neededNow, int area, int storeId) {
+    public Item(long id, String itemName, int amount, boolean neededNow, int area, long storeId) {
         this.itemId = id;
         this.itemName = itemName;
         this.amount = amount;
@@ -41,12 +41,17 @@ public class Item extends RealmObject {
         this.storeId = storeId;
     }
 
-    public Item(String itemName, int amount, boolean neededNow, int area, int storeId) {
-        this(realmManager.getRealm().where(Item.class).max(ITEM_ID).intValue() + 1, itemName, amount, neededNow, area, storeId);
+    public Item(String itemName, int amount, boolean neededNow, int area, long storeId) {
+        this.itemId = realmManager.getRealm().where(Item.class).count();
+        this.itemName = itemName;
+        this.amount = amount;
+        this.neededNow = neededNow;
+        this.area = area;
+        this.storeId = storeId;
     }
 
     public Item(String itemName, int amount, boolean neededNow, int area, String storeName) {
-        this(realmManager.getRealm().where(Item.class).max(ITEM_ID).intValue() + 1, itemName, amount, neededNow, area, realmManager.getRealm().where(Store.class).equalTo("storeName", storeName).findFirst().getStoreId());
+        this(itemName, amount, neededNow, area, realmManager.getRealm().where(Store.class).equalTo("storeName", storeName).findFirst().getStoreId());
     }
 
     public static void copyFrom(final Item from, final Item to) {
@@ -112,11 +117,11 @@ public class Item extends RealmObject {
         this.neededNow = neededNow;
     }
 
-    public int getStoreId() {
+    public long getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(int storeId) {
+    public void setStoreId(long storeId) {
         this.storeId = storeId;
     }
 
