@@ -1,16 +1,14 @@
 <resources>
-    <string name="app_name">Shopping Cart</string>
+    <string name="app_name">ShoppingBasket</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="action_settings">Settings</string>
-    <string name="store_select">Store:</string>
-    <string name="name_item">Item:</string>
-    <string name="cancel_button_string">@android:string/cancel</string>
-    <string name="save_button_string">@android:string/ok</string>
-    <string name="placeholder_item_name">Toilet paper</string>
-    <string name="edit_label">Edit the item</string>
-    <string name="item_icon_desc">Item image</string>
-    <string name="leftovers">&#8203;Leftovers</string>
-    <string name="undo">Undo</string>
-    <string name="item_dialog_title">Add a new item</string>
-    <string name="item_added">Item added</string>
-    <string name="change_item_dialog">Change an item</string>
+    <string name="item_icon_desc">Optional image showing article</string>
+    <string name="edit_label">Edit the current article</string>
+    <string name="action_add_store">Add a Store</string>
+    <string name="store_name">Store name</string>
+    <string name="save">Save</string>
+    <string name="cancel">@android:string/cancel</string>
 </resources>

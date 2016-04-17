@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="editTextStyle">@style/App_EditText</item>
-        <item name="android:checkboxStyle">@style/App_Checkbox</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -15,53 +14,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="AppTheme.Dialog">
-        <item name="android:padding">24dp</item>
-    </style>
+    <style name="App_EditText" parent="Widget.AppCompat.EditText" />
 
-    <style name="AppTheme.Dialog.Container">
-        <item name="android:paddingTop">20dp</item>
-    </style>
-
-    <style name="AppTheme.Dialog.Content">
-        <item name="android:padding">0dp</item>
-    </style>
-
-    <style name="AppTheme.Dialog.Content.Control">
-    </style>
-
-    <style name="App_EditText" parent="Widget.AppCompat.EditText">
-        <item name="android:height">48dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
-    </style>
-
-    <style name="AppTheme.Dialog.Button">
-        <item name="android:height">36dp</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:minWidth">64dp</item>
-        <item name="android:textColor">?attr/colorAccent</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="App_Checkbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="android:padding">16dp</item>
-    </style>
-
-    <style name="AppTheme.IconButton">
-        <item name="android:padding">12dp</item>
-        <item name="android:alpha">1</item>
-    </style>
-
-    <style name="AppTheme.Card">
-
+    <style name="AppTheme.IconButton" parent="Base.Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:alpha">0.54</item>
     </style>
 
 </resources>
