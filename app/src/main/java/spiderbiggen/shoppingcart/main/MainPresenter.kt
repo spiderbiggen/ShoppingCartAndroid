@@ -38,6 +38,7 @@ class MainPresenter(var mainView: IMainView?) : IMainPresenter, Observer, IDataI
                 mainView?.setStores(StoreManager.getStoreList())
             }
             ItemManager -> {
+                mainView?.showProgress()
                 mainView?.setItems(ItemManager.getItemList(data as Int))
             }
         }

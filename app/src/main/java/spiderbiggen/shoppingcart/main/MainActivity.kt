@@ -62,6 +62,8 @@ class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigation
         navigationView = findViewById(R.id.nav_view) as NavigationView?
         navigationView?.setNavigationItemSelectedListener(this)
 
+        progressBar = findViewById(R.id.progressBar) as ProgressBar?
+
         recyclerView = findViewById(R.id.main_content) as RecyclerView?
         recyclerView?.setHasFixedSize(true);
         recyclerView?.layoutManager = LinearLayoutManager(this)
@@ -160,6 +162,7 @@ class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigation
         val storeId = id - menuStoresStart
 
         if (storeId in StoreManager.getIdList()) {
+            showProgress()
             dataInteractor .findItems(presenter, storeId)
             title = item.title
             selectedStoreId = storeId
