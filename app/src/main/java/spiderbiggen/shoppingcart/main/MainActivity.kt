@@ -102,24 +102,34 @@ class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigation
         val id = item.itemId
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true
-        }
-        if (id == R.id.action_add_store) {
-            val builder = AlertDialog.Builder(this)
-            val view = this.layoutInflater.inflate(R.layout.store_dialog, null)
-            builder.setTitle(R.string.action_add_store)
-            builder.setView(view)
-            builder.setPositiveButton(R.string.save, { dialog, id ->
-                val editStoreName = view.findViewById(R.id.edit_store_name) as EditText
-                StoreManager.add(Store(editStoreName.text.toString()))
-                dialog.dismiss()
-            })
-            builder.setNegativeButton(R.string.cancel, { dialog, id ->
-                dialog.cancel()
-            })
-            builder.create().show()
-            return true
+        when (id) {
+            R.id.action_settings -> {
+                return true
+            }
+            R.id.action_save -> {
+                presenter.saveData(this)
+                return true
+            }
+            R.id.action_load -> {
+                presenter.loadData(this)
+                return true
+            }
+            R.id.action_add_store -> {
+                val builder = AlertDialog.Builder(this)
+                val view = this.layoutInflater.inflate(R.layout.store_dialog, null)
+                builder.setTitle(R.string.action_add_store)
+                builder.setView(view)
+                builder.setPositiveButton(R.string.save, { dialog, id ->
+                    val editStoreName = view.findViewById(R.id.edit_store_name) as EditText
+                    StoreManager.add(Store(editStoreName.text.toString()))
+                    dialog.dismiss()
+                })
+                builder.setNegativeButton(R.string.cancel, { dialog, id ->
+                    dialog.cancel()
+                })
+                builder.create().show()
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)

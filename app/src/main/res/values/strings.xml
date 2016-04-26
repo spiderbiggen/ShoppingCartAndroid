@@ -11,4 +11,6 @@
     <string name="store_name">Store name</string>
     <string name="save">Save</string>
     <string name="cancel">@android:string/cancel</string>
+    <string name="save_state">Save Current Data</string>
+    <string name="load_state">Load Last Data</string>
 </resources>

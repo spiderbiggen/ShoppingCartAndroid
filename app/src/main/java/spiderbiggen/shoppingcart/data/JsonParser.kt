@@ -18,9 +18,9 @@ object JsonParser {
     private val TAG = "JsonParser"
 
     @Throws(IOException::class)
-    fun readJsonStream(`in`: Context): HashMap<Int, IStore> {
+    fun readJsonStream(context: Context): HashMap<Int, IStore> {
         val start = System.currentTimeMillis()
-        val storeFile = `in`.assets.open("stores.json")
+        val storeFile = context.assets.open("stores.json")
         val reader = JsonReader(InputStreamReader(storeFile, "UTF-8"))
         val stores = readStores(reader)
         reader.close()
@@ -73,6 +73,7 @@ object JsonParser {
                     "name" -> itemName = reader.nextString()
                     "amount" -> amount = reader.nextString()
                     "needed" -> needed = reader.nextBoolean()
+                    else -> reader.nextString()
                 }
             }
             reader.endObject()

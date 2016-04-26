@@ -2,9 +2,15 @@ package spiderbiggen.shoppingcart.data
 
 import android.content.Context
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import spiderbiggen.shoppingcart.BuildConfig
 import spiderbiggen.shoppingcart.data.interfaces.IStore
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.util.*
+import java.util.concurrent.locks.ReentrantLock
+
 
 /**
  * Created by Stefan Breetveld on 31-3-2016.
@@ -14,6 +20,9 @@ object StoreManager : Observable() {
 
     val leftoverStore = Store(0, "\u2063Leftovers")
     val storeMap: MutableMap<Int, IStore> = mutableMapOf(kotlin.Pair(leftoverStore.id, leftoverStore))
+    val fileName = "stores.json"
+    val lock = ReentrantLock()
+    val fillList = false
 
     private var storeListCached: MutableList<IStore> = arrayListOf()
 
@@ -28,8 +37,15 @@ object StoreManager : Observable() {
 
     fun getIdList(): List<Int> = storeMap.keys.toList()
 
+    fun setStores(stores: List<Store>) {
+        storeMap.clear()
+        stores.forEach{store -> storeMap.put(store.id, store)}
+        setChanged()
+        notifyObservers()2
+    }
+
     init {
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && fillList) {
             Log.i("StoreManager", "Constructor: add demo stores")
             val products = listOf("Kaas", "Oreo", "Pizza", "Appel", "Pudding", "Chips", "Salami", "Banaan", "Kroket", "Biefstuk", "Aardappels")
             val rand = Random()
@@ -57,8 +73,23 @@ object StoreManager : Observable() {
         notifyObservers()
     }
 
+    fun saveData(context: Context) {
+        val storeFile = context.openFileOutput(fileName, Context.MODE_WORLD_WRITEABLE)
+        val writer = OutputStreamWriter(storeFile, "UTF-8")
+        Log.d("StoreManager", "saveData: ${Gson().toJson(getStoreList())}" )
+        Gson().toJson(getStoreList(), writer)
+        writer.close()
+    }
+
     fun readData(context: Context) {
-        JsonParser.readJsonStream(context)
+        val storeFile = context.openFileInput(fileName)
+        val reader = InputStreamReader(storeFile, "UTF-8")
+        val type = object : TypeToken<MutableList<Store>>() {}.type
+        val gson : MutableList<Store> = Gson().fromJson(reader, type)
+        reader.close()
+        Log.d("StoreManager", "readData: $gson" )
+        setStores(gson)
+
     }
 
 }
