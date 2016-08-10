@@ -12,4 +12,6 @@ interface IMainView {
     fun hideProgress()
     fun setItems(items: MutableList<IItem>)
     fun setStores(stores: MutableList<IStore>)
+    fun showToast(resID: Int)
+    fun showToast(text: String)
 }

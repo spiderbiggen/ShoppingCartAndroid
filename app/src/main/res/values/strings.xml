@@ -13,4 +13,6 @@
     <string name="cancel">@android:string/cancel</string>
     <string name="save_state">Save Current Data</string>
     <string name="load_state">Load Last Data</string>
+    <string name="toast_file_not_found">File not found. Try saving first.</string>
+    <string name="toast_no_stores_save">There\'s nothing to save.</string>
 </resources>

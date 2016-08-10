@@ -34,11 +34,19 @@ class MainPresenter(var mainView: IMainView?) : IMainPresenter, Observer, IDataI
     }
 
     override fun saveData(context: Context) {
-        StoreManager.saveData(context)
+        StoreManager.saveData(context, this)
     }
 
     override fun loadData(context: Context) {
-        StoreManager.readData(context)
+        StoreManager.readData(context, this)
+    }
+
+    override fun showToast(resID: Int) {
+        mainView?.showToast(resID)
+    }
+
+    override fun showToast(text: String) {
+        mainView?.showToast(text)
     }
 
     override fun update(observable: Observable?, data: Any?) {
