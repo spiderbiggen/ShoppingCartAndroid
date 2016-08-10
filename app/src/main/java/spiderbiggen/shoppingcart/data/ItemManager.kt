@@ -9,7 +9,8 @@ import java.util.*
  */
 object ItemManager : Observable() {
 
-    private var cachedItemList: Pair<Int, MutableList<IItem>> = Pair(-1, mutableListOf())
+    var cachedItemList: Pair<Int, MutableList<IItem>> = Pair(-1, mutableListOf())
+        private set
 
     fun getItemList(storeId: Int): MutableList<IItem> {
         if(cachedItemList.first != storeId) {
@@ -22,6 +23,8 @@ object ItemManager : Observable() {
             } else {
                 cachedItemList = Pair(storeId, StoreManager.storeMap[storeId]?.itemList as MutableList<IItem>)
             }
+            setChanged()
+            notifyObservers(cachedItemList.first)
         }
         return cachedItemList.second
     }

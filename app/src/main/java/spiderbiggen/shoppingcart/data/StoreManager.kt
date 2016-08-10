@@ -1,15 +1,18 @@
 package spiderbiggen.shoppingcart.data
 
 import android.content.Context
+import android.os.Handler
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import spiderbiggen.shoppingcart.BuildConfig
+import spiderbiggen.shoppingcart.R
 import spiderbiggen.shoppingcart.data.interfaces.IStore
+import spiderbiggen.shoppingcart.main.IMainPresenter
+import java.io.FileNotFoundException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.util.*
-import java.util.concurrent.locks.ReentrantLock
 
 
 /**
@@ -21,7 +24,6 @@ object StoreManager : Observable() {
     val leftoverStore = Store(0, "\u2063Leftovers")
     val storeMap: MutableMap<Int, IStore> = mutableMapOf(kotlin.Pair(leftoverStore.id, leftoverStore))
     val fileName = "stores.json"
-    val lock = ReentrantLock()
     val fillList = false
 
     private var storeListCached: MutableList<IStore> = arrayListOf()
@@ -41,7 +43,7 @@ object StoreManager : Observable() {
         storeMap.clear()
         stores.forEach{store -> storeMap.put(store.id, store)}
         setChanged()
-        notifyObservers()2
+        notifyObservers()
     }
 
     init {
@@ -73,23 +75,51 @@ object StoreManager : Observable() {
         notifyObservers()
     }
 
-    fun saveData(context: Context) {
-        val storeFile = context.openFileOutput(fileName, Context.MODE_WORLD_WRITEABLE)
-        val writer = OutputStreamWriter(storeFile, "UTF-8")
-        Log.d("StoreManager", "saveData: ${Gson().toJson(getStoreList())}" )
-        Gson().toJson(getStoreList(), writer)
-        writer.close()
+    fun saveData(context: Context, mainPresenter: IMainPresenter) {
+
+        val list = getStoreList()
+        list.remove(leftoverStore)
+        if (list.isEmpty()) {
+            mainPresenter.showToast(R.string.toast_no_stores_save)
+            Log.d("StoreManager", "saveData: List is empty")
+        } else {
+            Handler().post {
+                val storeFile = context.openFileOutput(fileName, Context.MODE_PRIVATE)
+                val writer = OutputStreamWriter(storeFile, "UTF-8")
+                Log.d("StoreManager", "saveData: START" )
+                Gson().toJson(list, writer)
+                writer.close()
+                Log.d("StoreManager", "saveData: SUCCESS")
+            }
+        }
     }
 
-    fun readData(context: Context) {
-        val storeFile = context.openFileInput(fileName)
-        val reader = InputStreamReader(storeFile, "UTF-8")
-        val type = object : TypeToken<MutableList<Store>>() {}.type
-        val gson : MutableList<Store> = Gson().fromJson(reader, type)
-        reader.close()
-        Log.d("StoreManager", "readData: $gson" )
-        setStores(gson)
-
+    fun readData(context: Context, mainPresenter: IMainPresenter) {
+        Handler().post {
+            try {
+                if(!context.fileList().contains(fileName)) throw FileNotFoundException()
+                val storeFile = context.openFileInput(fileName)
+                val reader = InputStreamReader(storeFile, "UTF-8")
+                val type = object : TypeToken<MutableList<Store>>() {}.type
+                Log.d("StoreManager", "readData: START")
+                val gson: MutableList<Store>? = Gson().fromJson(reader, type)
+                reader.close()
+                Log.d("StoreManager", "readData: SUCCESS")
+                if (gson == null) throw FileNotFoundException() //TODO maybe change this to something like EmptyFileException
+                gson.add(leftoverStore)
+                setStores(gson)
+                val selectedStoreId = leftoverStore.id
+                if(selectedStoreId in getIdList()) {
+                    ItemManager.getItemList(selectedStoreId)
+                } else {
+                    ItemManager.getItemList(leftoverStore.id)
+                }
+            } catch(e: FileNotFoundException) {
+                Log.d("StoreManager", "readData: FAIL")
+                mainPresenter.showToast(R.string.toast_file_not_found)
+                Log.w("StoreManager", "readData: File does not exist")
+            }
+        }
     }
 
 }

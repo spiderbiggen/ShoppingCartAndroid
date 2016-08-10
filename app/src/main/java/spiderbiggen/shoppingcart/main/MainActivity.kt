@@ -17,6 +17,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.Toast
 import spiderbiggen.shoppingcart.R
 import spiderbiggen.shoppingcart.data.ItemAdapter
 import spiderbiggen.shoppingcart.data.Store
@@ -25,7 +26,6 @@ import spiderbiggen.shoppingcart.data.interfaces.IItem
 import spiderbiggen.shoppingcart.data.interfaces.IStore
 
 class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
 
     var presenter: MainPresenter = MainPresenter(this)
     var dataInteractor = DataInteractor()
@@ -65,7 +65,7 @@ class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigation
         progressBar = findViewById(R.id.progressBar) as ProgressBar?
 
         recyclerView = findViewById(R.id.main_content) as RecyclerView?
-        recyclerView?.setHasFixedSize(true);
+        recyclerView?.setHasFixedSize(true)
         recyclerView?.layoutManager = LinearLayoutManager(this)
 
         dataInteractor.findStores(presenter)
@@ -144,7 +144,7 @@ class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigation
         var selectedItem: MenuItem? = null
         navMenu?.clear()
         for(store in stores) {
-            var v = navMenu?.add(menuGroupId, store.id + menuStoresStart, 3, store.name)?.setIcon(R.drawable.ic_store_24dp)
+            val v = navMenu?.add(menuGroupId, store.id + menuStoresStart, 3, store.name)?.setIcon(R.drawable.ic_store_24dp)
             if(store.id == selectedStoreId) {
                 selectedItem = v
             }
@@ -166,6 +166,14 @@ class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigation
         recyclerView?.visibility = View.VISIBLE
     }
 
+    override fun showToast(resID: Int) {
+        Toast.makeText(this, resID, Toast.LENGTH_LONG).show()
+    }
+
+    override fun showToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         val id = item.itemId
@@ -173,7 +181,7 @@ class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigation
 
         if (storeId in StoreManager.getIdList()) {
             showProgress()
-            dataInteractor .findItems(presenter, storeId)
+            dataInteractor.findItems(presenter, storeId)
             title = item.title
             selectedStoreId = storeId
             return true

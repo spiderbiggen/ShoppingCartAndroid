@@ -9,6 +9,8 @@ import android.content.Context
 interface IMainPresenter {
     fun onResume()
     fun onDestroy()
-    open fun saveData(context: Context)
-    open fun loadData(context: Context)
+    fun saveData(context: Context)
+    fun loadData(context: Context)
+    fun showToast(resID: Int)
+    fun showToast(text: String)
 }
