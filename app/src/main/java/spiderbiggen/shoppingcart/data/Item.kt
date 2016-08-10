@@ -9,7 +9,7 @@ import spiderbiggen.shoppingcart.data.interfaces.IItem
 class Item(override val id: Int, override var name: String, override var amount: String, override var required: Boolean) : IItem {
 
     companion object {
-        var maxId: Int = 0
+        var maxId: Int = 0 //Highest currently assigned ID.
     }
 
     init {

@@ -25,6 +25,11 @@ import spiderbiggen.shoppingcart.data.StoreManager
 import spiderbiggen.shoppingcart.data.interfaces.IItem
 import spiderbiggen.shoppingcart.data.interfaces.IStore
 
+/**
+ * Main Activity Responsible for most user interaction.
+ *
+ * @author Stefan Breetveld
+ */
 class MainActivity : IMainView, AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     var presenter: MainPresenter = MainPresenter(this)

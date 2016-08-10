@@ -5,8 +5,9 @@ import spiderbiggen.shoppingcart.data.ItemManager
 import spiderbiggen.shoppingcart.data.StoreManager
 
 /**
- * Created by Stefan Breetveld on 17-4-2016.
- * Part of ShoppingBasket.
+ * Implementation of [IDataInteractor]
+ *
+ * @author Stefan Breetveld
  */
 class DataInteractor : IDataInteractor {
     override fun findStores(listener: IDataInteractor.OnFinishedListener) {
