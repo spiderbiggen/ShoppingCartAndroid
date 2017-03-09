@@ -24,7 +24,6 @@ object StoreManager : Observable() {
     val leftoverStore = Store(0, "\u2063Leftovers")
     val storeMap: MutableMap<Int, IStore> = mutableMapOf(kotlin.Pair(leftoverStore.id, leftoverStore))
     val fileName = "stores.json"
-    val fillList = false
 
     private var storeListCached: MutableList<IStore> = arrayListOf()
 
@@ -47,7 +46,7 @@ object StoreManager : Observable() {
     }
 
     init {
-        if (BuildConfig.DEBUG && fillList) {
+        if (BuildConfig.DEBUG && BuildConfig.testData) {
             Log.i("StoreManager", "Constructor: add demo stores")
             val products = listOf("Kaas", "Oreo", "Pizza", "Appel", "Pudding", "Chips", "Salami", "Banaan", "Kroket", "Biefstuk", "Aardappels")
             val rand = Random()
